@@ -54,14 +54,48 @@ docker compose up
 # 5. Open http://localhost:3000 (admin/admin)
 ```
 
+## Running unsigned (development only)
+
+The steps above already work out of the box because the bundled
+`docker-compose.yaml` tells Grafana to trust this specific plugin ID without a
+signature — see `GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: myorg-a2achat-app`
+in `.config/docker-compose-base.yaml`. This section is for running unsigned
+on a Grafana instance **other than** that bundled dev container — e.g. an
+existing dev/test Grafana you already have running elsewhere.
+
+Grafana refuses to load unsigned plugins unless explicitly told which plugin
+IDs to trust. Set one of:
+
+- **grafana.ini**:
+  ```ini
+  [plugins]
+  allow_loading_unsigned_plugins = myorg-a2achat-app
+  ```
+- **Environment variable** (equivalent, e.g. for a Docker deployment):
+  ```
+  GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=myorg-a2achat-app
+  ```
+
+  Both take a comma-separated list, so multiple plugin IDs can be trusted at
+  once if needed.
+
+Then copy the built `dist/` into that Grafana's plugins directory as
+`myorg-a2achat-app` (see the plugin directory paths in the [production
+installation](#production-installation-self-hosted-behind-nginx) section
+below) and restart Grafana.
+
+**Never do this in production.** It disables Grafana's plugin signature
+verification entirely for the listed plugin ID(s) — acceptable for a local
+box only you control, a real problem on anything reachable by others. For an
+actual deployment, see [Signing the plugin](#signing-the-plugin) below
+instead.
+
 ## Signing the plugin
 
-This plugin ships **unsigned**, which is fine for local dev (Grafana is told
-to trust it explicitly via `GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS` in the
-dev `docker-compose.yaml`), but a real Grafana instance rejects unsigned
-plugins by default. Getting a **private signature** is one command once the
-prerequisites are in place — the setup is what takes a few minutes, not the
-signing itself.
+This plugin ships **unsigned**, which is fine for local dev (see above), but
+a real Grafana instance rejects unsigned plugins by default. Getting a
+**private signature** is one command once the prerequisites are in place —
+the setup is what takes a few minutes, not the signing itself.
 
 **One-time setup:**
 
