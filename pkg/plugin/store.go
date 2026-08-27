@@ -148,7 +148,7 @@ func (s *Store) AddMessage(ctx context.Context, conversationID int64, role, cont
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 	if _, err := tx.ExecContext(ctx,
 		`INSERT INTO messages (conversation_id, role, content) VALUES (?, ?, ?)`,
 		conversationID, role, content); err != nil {
