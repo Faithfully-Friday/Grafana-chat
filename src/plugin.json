@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
-  "name": "Support Assistant",
+  "name": "Grafana-chat",
   "id": "myorg-a2achat-app",
   "backend": true,
   "executable": "gpx_a2a_chat",

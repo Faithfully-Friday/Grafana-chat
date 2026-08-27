@@ -256,8 +256,8 @@ docker compose logs grafana | grep myorg-a2achat-app
 ```
 
 Expect `Plugin registered pluginId=myorg-a2achat-app` with **no** "Plugin is
-unsigned" warning. In the UI: **Administration → Plugins → Support
-Assistant** should show a signed badge instead of the unsigned-plugin
+unsigned" warning. In the UI: **Administration → Plugins → Grafana-chat**
+should show a signed badge instead of the unsigned-plugin
 warning banner.
 
 **Troubleshooting**
@@ -277,7 +277,7 @@ warning banner.
 
 The same configuration steps apply whether you installed via the dev
 `docker compose` setup above or the production install: In Grafana, go to
-**Administration → Plugins → Support Assistant → Configuration**:
+**Administration → Plugins → Grafana-chat → Configuration**:
 
 | Setting | Description |
 | --- | --- |
@@ -289,7 +289,7 @@ Use **Test connection** after saving — it fetches the agent card from
 `{endpoint}/.well-known/agent-card.json` and shows the agent name, description,
 and declared streaming capability.
 
-Then open **More apps → Support Assistant** and start chatting.
+Then open **More apps → Grafana-chat** and start chatting.
 
 ## How it works
 
