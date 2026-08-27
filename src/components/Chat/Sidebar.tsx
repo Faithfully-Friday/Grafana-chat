@@ -3,6 +3,7 @@ import { css } from '@emotion/css';
 import { GrafanaTheme2 } from '@grafana/data';
 import { Button, Icon, IconButton, ScrollContainer, useStyles2 } from '@grafana/ui';
 import { Conversation } from '../../api/client';
+import { testIds } from '../testIds';
 
 interface Props {
   conversations: Conversation[];
@@ -17,7 +18,14 @@ export function Sidebar({ conversations, activeId, onSelect, onNew, onDelete }: 
   return (
     <div className={s.root}>
       <div className={s.header}>
-        <Button icon="plus" variant="secondary" fill="outline" onClick={onNew} fullWidth>
+        <Button
+          icon="plus"
+          variant="secondary"
+          fill="outline"
+          onClick={onNew}
+          fullWidth
+          data-testid={testIds.chat.newChatButton}
+        >
           New chat
         </Button>
       </div>
