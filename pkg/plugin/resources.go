@@ -166,7 +166,7 @@ func (a *App) streamChat(w http.ResponseWriter, ctx context.Context, id int64, m
 
 	sendFrame := func(ev StreamEvent) {
 		payload, _ := json.Marshal(ev)
-		fmt.Fprintf(w, "data: %s\n\n", payload)
+		_, _ = fmt.Fprintf(w, "data: %s\n\n", payload)
 		flusher.Flush()
 	}
 

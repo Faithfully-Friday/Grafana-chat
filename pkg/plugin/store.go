@@ -49,7 +49,7 @@ func OpenStore() (*Store, error) {
 	db.SetMaxOpenConns(1)
 	s := &Store{db: db}
 	if err := s.migrate(); err != nil {
-		db.Close()
+		_ = db.Close()
 		return nil, err
 	}
 	return s, nil
@@ -91,7 +91,7 @@ func (s *Store) ListConversations(ctx context.Context) ([]Conversation, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	out := []Conversation{}
 	for rows.Next() {
 		var c Conversation
@@ -130,7 +130,7 @@ func (s *Store) ListMessages(ctx context.Context, conversationID int64) ([]Messa
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	out := []Message{}
 	for rows.Next() {
 		var m Message

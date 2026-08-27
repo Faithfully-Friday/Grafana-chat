@@ -32,7 +32,7 @@ func TestMessageSend(t *testing.T) {
 			t.Errorf("unexpected method %q", req.Method)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, `{"jsonrpc":"2.0","id":"1","result":{"kind":"message","role":"agent","contextId":"ctx-9","parts":[{"kind":"text","text":"full reply"}]}}`)
+		_, _ = fmt.Fprint(w, `{"jsonrpc":"2.0","id":"1","result":{"kind":"message","role":"agent","contextId":"ctx-9","parts":[{"kind":"text","text":"full reply"}]}}`)
 	}))
 	defer srv.Close()
 
@@ -57,7 +57,7 @@ func TestMessageStreamDeltas(t *testing.T) {
 			`{"jsonrpc":"2.0","id":"1","result":{"kind":"status-update","contextId":"ctx-1","final":true,"status":{"state":"completed"}}}`,
 		}
 		for _, f := range frames {
-			fmt.Fprintf(w, "data: %s\n\n", f)
+			_, _ = fmt.Fprintf(w, "data: %s\n\n", f)
 			fl.Flush()
 		}
 	}))
@@ -100,7 +100,7 @@ func TestMessageStreamFullReplacementArtifact(t *testing.T) {
 			`{"jsonrpc":"2.0","id":"1","result":{"kind":"status-update","final":true,"status":{"state":"completed"}}}`,
 		}
 		for _, f := range frames {
-			fmt.Fprintf(w, "data: %s\n\n", f)
+			_, _ = fmt.Fprintf(w, "data: %s\n\n", f)
 		}
 	}))
 	defer srv.Close()
@@ -123,7 +123,7 @@ func TestMessageStreamFullReplacementArtifact(t *testing.T) {
 func TestHandleChatNonStreaming(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, `{"jsonrpc":"2.0","id":"1","result":{"kind":"message","role":"agent","contextId":"ctx-5","parts":[{"kind":"text","text":"pong"}]}}`)
+		_, _ = fmt.Fprint(w, `{"jsonrpc":"2.0","id":"1","result":{"kind":"message","role":"agent","contextId":"ctx-5","parts":[{"kind":"text","text":"pong"}]}}`)
 	}))
 	defer srv.Close()
 
@@ -170,7 +170,7 @@ func TestHandleChatStreaming(t *testing.T) {
 			`{"jsonrpc":"2.0","id":"1","result":{"kind":"artifact-update","artifactId":"a","contextId":"c2","append":true,"artifact":{"parts":[{"kind":"text","text":"eamed"}]}}}`,
 			`{"jsonrpc":"2.0","id":"1","result":{"kind":"status-update","final":true,"status":{"state":"completed"}}}`,
 		} {
-			fmt.Fprintf(w, "data: %s\n\n", f)
+			_, _ = fmt.Fprintf(w, "data: %s\n\n", f)
 			fl.Flush()
 		}
 	}))
@@ -227,11 +227,11 @@ func TestHandleChatContextRetry(t *testing.T) {
 		params, _ := json.Marshal(req.Params)
 		if calls == 1 && strings.Contains(string(params), "stale-ctx") {
 			w.WriteHeader(http.StatusNotFound)
-			fmt.Fprint(w, `{"jsonrpc":"2.0","id":"1","error":{"code":-32602,"message":"unknown contextId"}}`)
+			_, _ = fmt.Fprint(w, `{"jsonrpc":"2.0","id":"1","error":{"code":-32602,"message":"unknown contextId"}}`)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, `{"jsonrpc":"2.0","id":"1","result":{"kind":"message","role":"agent","contextId":"fresh-ctx","parts":[{"kind":"text","text":"ok"}]}}`)
+		_, _ = fmt.Fprint(w, `{"jsonrpc":"2.0","id":"1","result":{"kind":"message","role":"agent","contextId":"fresh-ctx","parts":[{"kind":"text","text":"ok"}]}}`)
 	}))
 	defer srv.Close()
 
@@ -278,7 +278,7 @@ func TestHandleAgentCard(t *testing.T) {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, `{"name":"Test Agent","capabilities":{"streaming":true}}`)
+		_, _ = fmt.Fprint(w, `{"name":"Test Agent","capabilities":{"streaming":true}}`)
 	}))
 	defer srv.Close()
 

@@ -166,7 +166,7 @@ func (c *A2AClient) MessageStream(ctx context.Context, message, contextID string
 		return nil, err
 	}
 	if resp.StatusCode != http.StatusOK {
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 		snippet, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
 		return nil, fmt.Errorf("A2A stream failed with HTTP %d: %s", resp.StatusCode, strings.TrimSpace(string(snippet)))
 	}
@@ -174,7 +174,7 @@ func (c *A2AClient) MessageStream(ctx context.Context, message, contextID string
 	ch := make(chan StreamEvent, 16)
 	go func() {
 		defer close(ch)
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 
 		// artifactId -> text seen so far, so artifact-update events that carry
 		// the full artifact text (append omitted/false) can be reduced to deltas.
@@ -287,7 +287,7 @@ func (c *A2AClient) MessageSend(ctx context.Context, message, contextID string) 
 	if err != nil {
 		return "", "", err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	body, err := io.ReadAll(io.LimitReader(resp.Body, 10<<20))
 	if err != nil {
 		return "", "", err
@@ -350,7 +350,7 @@ func (c *A2AClient) FetchAgentCard(ctx context.Context) (json.RawMessage, error)
 			return nil, err
 		}
 		body, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		if err != nil {
 			return nil, err
 		}

@@ -78,7 +78,7 @@ func NewApp(_ context.Context, instanceSettings backend.AppInstanceSettings) (in
 // created.
 func (a *App) Dispose() {
 	if a.store != nil {
-		a.store.Close()
+		_ = a.store.Close()
 	}
 }
 
